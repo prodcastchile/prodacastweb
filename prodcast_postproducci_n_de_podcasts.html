@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prodcast | Grabación y Postproducción de Podcasts de Nivel Profesional</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            green: '#39FF14',
+                            glow: 'rgba(57, 255, 20, 0.4)',
+                            dim: '#26c20d'
+                        },
+                        dark: {
+                            base: '#0D0D0D',
+                            card: '#161616',
+                            panel: '#1F1F1F',
+                            input: '#262626',
+                            border: '#2E2E2E'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0D0D0D;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Neon Glow Styles */
+        .neon-glow-btn {
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.35);
+            transition: all 0.3s ease;
+        }
+        .neon-glow-btn:hover {
+            box-shadow: 0 0 35px rgba(57, 255, 20, 0.65);
+            transform: translateY(-2px);
+        }
+
+        .neon-border-glow {
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.2);
+            border-color: #39FF14;
+        }
+
+        .glass-dark {
+            background: rgba(22, 22, 22, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Animated Audio Waveform Bars */
+        .wave-bar-hero {
+            animation: pulseHeight 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseHeight {
+            0% { height: 15%; }
+            100% { height: 95%; }
+        }
+
+        /* Toggle Switch Custom Design */
+        .toggle-bg:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background-color: #0D0D0D;
+            border-radius: 9999px;
+            height: 1.75rem;
+            width: 1.75rem;
+            transition: all 0.3s ease;
+        }
+        input:checked + .toggle-bg:after {
+            transform: translateX(1.75rem);
+            background-color: #0D0D0D;
+        }
+        input:checked + .toggle-bg {
+            background-color: #39FF14;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon-green selection:text-black relative overflow-x-hidden">
+
+    <!-- Ambient Grid & Glows -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-neon-green/5 rounded-full blur-[180px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-emerald-900/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+
+    <!-- 1. NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-dark border-b border-dark-border/60">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-neon-green text-black font-extrabold flex items-center justify-center font-display text-xl shadow-[0_0_15px_rgba(57,255,20,0.5)] group-hover:scale-105 transition-transform">
+                    P
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight font-display text-white block leading-none">PRODCAST</span>
+                    <span class="text-[10px] tracking-widest text-neon-green font-mono uppercase">prodcast.cl</span>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                <a href="#demo-ab" class="hover:text-neon-green transition-colors">Comparador A/B</a>
+                <a href="#pain-points" class="hover:text-neon-green transition-colors">Beneficios</a>
+                <a href="#services" class="hover:text-neon-green transition-colors">Servicios</a>
+                <a href="#portfolio" class="hover:text-neon-green transition-colors">Portafolio</a>
+                <a href="#process" class="hover:text-neon-green transition-colors">Proceso</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="#qualifier-form" class="px-6 py-2.5 rounded-full bg-neon-green text-black font-bold text-xs uppercase tracking-wider neon-glow-btn">
+                    Cotizar Proyecto
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger -->
+            <button id="mobileMenuBtn" class="md:hidden text-gray-300 focus:outline-none p-2">
+                <i class="fa-solid fa-bars text-2xl" id="menuIcon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden bg-dark-card border-b border-dark-border px-6 py-6 transition-all">
+            <div class="flex flex-col gap-4 text-base font-medium text-gray-200">
+                <a href="#demo-ab" class="mobile-link py-2 border-b border-dark-border/50">Comparador A/B</a>
+                <a href="#pain-points" class="mobile-link py-2 border-b border-dark-border/50">Beneficios</a>
+                <a href="#services" class="mobile-link py-2 border-b border-dark-border/50">Servicios</a>
+                <a href="#portfolio" class="mobile-link py-2 border-b border-dark-border/50">Portafolio</a>
+                <a href="#process" class="mobile-link py-2 border-b border-dark-border/50">Proceso</a>
+                <a href="#qualifier-form" class="mobile-link mt-2 py-3 text-center rounded-xl bg-neon-green text-black font-bold text-xs uppercase tracking-wider">
+                    Cotizar Proyecto
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section id="hero" class="relative min-h-screen pt-32 pb-20 flex items-center justify-center overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-dark-card border border-dark-border text-neon-green text-xs font-mono uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-neon-green animate-ping"></span>
+                    Postproducción de Podcasts & Ficción Sonora
+                </div>
+
+                <!-- H1 Headline -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight font-display leading-[1.08] text-white">
+                    Pasa de un audio casero a un show con <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-green via-emerald-400 to-teal-200">sonido profesional.</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-gray-400 text-lg sm:text-xl font-light max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    Olvídate del ruido de fondo, las horas perdidas editando y la frustración técnica. Tú graba la conversación; nosotros nos encargamos del diseño sonoro y el máster impecable.
+                </p>
+
+                <!-- CTAs -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#demo-ab" class="w-full sm:w-auto px-8 py-4 rounded-full bg-neon-green text-black font-bold text-sm tracking-wider uppercase neon-glow-btn flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-volume-high"></i> Escuchar la Diferencia
+                    </a>
+                    <a href="#qualifier-form" class="w-full sm:w-auto px-8 py-4 rounded-full bg-dark-card hover:bg-dark-panel text-gray-200 font-semibold text-sm tracking-wider uppercase border border-dark-border transition-all text-center">
+                        Diagnóstico Gratis
+                    </a>
+                </div>
+
+                <!-- Metrics -->
+                <div class="pt-8 grid grid-cols-3 gap-4 border-t border-dark-border/80 max-w-lg mx-auto lg:mx-0">
+                    <div>
+                        <span class="block text-2xl font-bold font-display text-white">LUFS</span>
+                        <span class="text-xs text-gray-400">Estándar Broadcast</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl font-bold font-display text-white">-16 dB</span>
+                        <span class="text-xs text-gray-400">Spotify & Apple Master</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl font-bold font-display text-white">48h</span>
+                        <span class="text-xs text-gray-400">Entrega Promedio</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero VU Meter Animated Visual Card -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md aspect-square rounded-3xl bg-dark-card p-8 border border-dark-border shadow-2xl flex flex-col justify-between overflow-hidden">
+                    <div class="flex items-center justify-between border-b border-dark-border pb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-neon-green/80"></span>
+                        </div>
+                        <span class="text-xs font-mono text-neon-green">LIVE_VU_METER // PRODCAST.CL</span>
+                    </div>
+
+                    <!-- Animated VU Bars Array -->
+                    <div class="my-6 flex items-end justify-between gap-1.5 h-44 px-2">
+                        <!-- 24 VU Bars -->
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.1s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.3s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.2s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.5s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.4s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.7s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.6s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.8s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.15s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.45s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.35s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.75s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.25s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.65s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.55s;"></div>
+                        <div class="wave-bar-hero w-full bg-neon-green/80 rounded-t-sm" style="animation-delay: 0.85s;"></div>
+                    </div>
+
+                    <!-- Audio Channel Signal Indicator -->
+                    <div class="bg-dark-base rounded-2xl p-4 border border-dark-border flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-neon-green animate-ping"></div>
+                            <span class="text-xs font-mono text-gray-300">FILTROS SPECTRAL NOISE: ACTIVE</span>
+                        </div>
+                        <span class="text-xs font-mono text-neon-green">+0.0 dBFS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. DEMO A/B AUDIO COMPARISON SECTION -->
+    <section id="demo-ab" class="py-24 bg-dark-card border-y border-dark-border relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Demostración de Impacto</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold font-display text-white">La diferencia entre que te escuchen o te ignoren.</h2>
+                <p class="text-gray-400 text-base mt-4">Escucha cómo transformamos tomas ruidosas, con eco y descompensadas en producciones limpias, potentes y balanceadas en tiempo real.</p>
+            </div>
+
+            <!-- Interactive A/B Audio Player Container -->
+            <div class="max-w-4xl mx-auto bg-dark-base rounded-3xl p-8 sm:p-12 border border-dark-border shadow-2xl relative">
+                
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-8 pb-8 border-b border-dark-border">
+                    <!-- Play / Pause Master Button -->
+                    <div class="flex items-center gap-5">
+                        <button id="abPlayBtn" class="w-16 h-16 rounded-full bg-neon-green text-black flex items-center justify-center text-2xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(57,255,20,0.4)]">
+                            <i class="fa-solid fa-play ml-1" id="abPlayIcon"></i>
+                        </button>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Demo en Vivo: Comparativa A/B</h3>
+                            <p class="text-xs text-gray-400 mt-1 font-mono" id="abStatusText">Presiona Play para iniciar reproducción simulada</p>
+                        </div>
+                    </div>
+
+                    <!-- TOGGLE SWITCH BETWEEN RAW AND MASTER -->
+                    <div class="flex items-center gap-4 bg-dark-panel p-3 rounded-2xl border border-dark-border">
+                        <span class="text-xs font-mono uppercase font-bold text-gray-400" id="rawLabel">Audio Crudo</span>
+                        
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="abToggle" class="sr-only">
+                            <div class="w-14 h-8 bg-dark-border toggle-bg rounded-full border border-gray-700"></div>
+                        </label>
+                        
+                        <span class="text-xs font-mono uppercase font-bold text-neon-green" id="masterLabel">Audio Masterizado</span>
+                    </div>
+                </div>
+
+                <!-- Realtime Dynamic Visualizer Waveform -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+                        <span id="abModeBadge" class="text-red-400 font-bold">MODO: AUDIO CRUDO (Siseos + Eco + Volumen Bajo)</span>
+                        <span id="abTimer">00:00 / 00:30</span>
+                    </div>
+
+                    <!-- Canvas/Bars Visualizer Area -->
+                    <div class="h-28 bg-dark-panel rounded-2xl p-4 border border-dark-border flex items-end justify-between gap-1" id="abWaveContainer">
+                        <!-- Dynamically filled by JS -->
+                    </div>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-gray-400">
+                    <div class="p-4 rounded-xl bg-dark-panel/60 border border-dark-border flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400 text-base"></i>
+                        <span>En Audio Crudo: Ruido estático, eco de sala y variaciones drásticas de volumen.</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-dark-panel/60 border border-dark-border flex items-center gap-3">
+                        <i class="fa-solid fa-circle-check text-neon-green text-base"></i>
+                        <span>En Audio Masterizado: Claridad espectral, voces presentes, nivelación -16 LUFS.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PAIN POINTS & SOLUTIONS (3 COLUMNS) -->
+    <section id="pain-points" class="py-24 relative border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Elimina la Frustración</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-display text-white">Tu contenido merece sonar al nivel de las grandes producciones.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Column 1: Time Pain Point -->
+                <div class="bg-dark-card p-8 rounded-3xl border border-dark-border space-y-6 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-clock font-bold"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">1. El Tiempo</h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-red-950/20 border border-red-900/30 text-red-300">
+                                <strong class="block text-red-400 font-mono uppercase mb-1">El Problema:</strong>
+                                Pasar 6 a 8 horas cortando silencio, removiendo muletillas y corrigiendo errores en un episodio de 45 minutos.
+                            </div>
+                            <div class="p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 text-emerald-300">
+                                <strong class="block text-neon-green font-mono uppercase mb-1">La Solución Prodcast:</strong>
+                                Recupera tu agenda. Tú solo subes tus grabaciones brutas a nuestro servidor y recibes el archivo final listo para publicar.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quality Pain Point -->
+                <div class="bg-dark-card p-8 rounded-3xl border border-dark-border space-y-6 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">2. La Calidad</h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-red-950/20 border border-red-900/30 text-red-300">
+                                <strong class="block text-red-400 font-mono uppercase mb-1">El Problema:</strong>
+                                Siseos, eco de habitación, clics de boca, 'pops' de micrófono y volúmenes desiguales entre los participantes.
+                            </div>
+                            <div class="p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 text-emerald-300">
+                                <strong class="block text-neon-green font-mono uppercase mb-1">La Solución Prodcast:</strong>
+                                Limpieza espectral quirúrgica, ecualización correctiva y nivelación LUFS estándar para sonar impecable en cualquier audífono.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Identity Pain Point -->
+                <div class="bg-dark-card p-8 rounded-3xl border border-dark-border space-y-6 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-neon-green/10 border border-neon-green/20 text-neon-green flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-compact-disc"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">3. La Identidad</h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-red-950/20 border border-red-900/30 text-red-300">
+                                <strong class="block text-red-400 font-mono uppercase mb-1">El Problema:</strong>
+                                Músicas de stock genéricas, cortinillas aburridas y falta de dinamismo que hacen que la audiencia abandone la escucha.
+                            </div>
+                            <div class="p-3 rounded-xl bg-neon-green/10 border border-neon-green/20 text-emerald-300">
+                                <strong class="block text-neon-green font-mono uppercase mb-1">La Solución Prodcast:</strong>
+                                Diseño sonoro a medida, efectos de sonido (SFX), intros/outros memorables y ráfagas que refuerzan tu identidad de marca.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SERVICES CARDS -->
+    <section id="services" class="py-24 bg-dark-base relative border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Planes Adaptables</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-display text-white">Soluciones de audio a la medida de tu proyecto.</h2>
+                <p class="text-gray-400 text-sm mt-2">Selecciona la modalidad que mejor se ajuste a tu frecuencia de publicación.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                
+                <!-- Plan A -->
+                <div class="bg-dark-card p-8 rounded-3xl border border-dark-border flex flex-col justify-between hover:border-gray-700 transition-all">
+                    <div class="space-y-6">
+                        <span class="text-xs font-mono uppercase text-gray-400">Opción A</span>
+                        <h3 class="text-2xl font-bold text-white">Edición & Mix Express</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Ideal para podcasters que solo buscan un sonido impecable sin arreglos sonoros complejos.</p>
+                        
+                        <ul class="space-y-3 text-xs text-gray-300 pt-4 border-t border-dark-border">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Limpieza de ruido de fondo y eco</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Edición de muletillas y pausas</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Nivelación de volumen (-16 LUFS)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Entrega en formato WAV & MP3 HQ</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#qualifier-form" onclick="selectPlan('Express')" class="block w-full py-3.5 rounded-xl bg-dark-panel hover:bg-gray-800 text-white font-bold text-xs uppercase tracking-wider text-center border border-dark-border transition-all">
+                            Cotizar este plan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Plan B (Featured - Neon Glow) -->
+                <div class="bg-dark-card p-8 rounded-3xl border-2 neon-border-glow flex flex-col justify-between relative transform lg:-translate-y-2">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-neon-green text-black font-extrabold text-[10px] uppercase tracking-widest shadow-md">
+                        MÁS RECOMENDADO
+                    </div>
+
+                    <div class="space-y-6">
+                        <span class="text-xs font-mono uppercase text-neon-green">Opción B</span>
+                        <h3 class="text-2xl font-bold text-white">Diseño Sonoro & Postproducción Integral</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Experiencia auditiva completa. Pensada para programas que buscan diferenciación y enganche de audiencia.</p>
+                        
+                        <ul class="space-y-3 text-xs text-gray-300 pt-4 border-t border-dark-border">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Todo lo incluido en el Plan Express</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Musicalización original y cortinillas</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Efectos de sonido (SFX) & Foley</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Masterización para Spotify & Apple Podcasts</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> 2 rondas de revisiones incluidas</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#qualifier-form" onclick="selectPlan('Integral')" class="block w-full py-4 rounded-xl bg-neon-green text-black font-bold text-xs uppercase tracking-wider text-center neon-glow-btn">
+                            Cotizar este plan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Plan C -->
+                <div class="bg-dark-card p-8 rounded-3xl border border-dark-border flex flex-col justify-between hover:border-gray-700 transition-all">
+                    <div class="space-y-6">
+                        <span class="text-xs font-mono uppercase text-gray-400">Opción C</span>
+                        <h3 class="text-2xl font-bold text-white">Podcast de Marca / Agencias</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Flujo de trabajo mensual recurrente para marcas corporativas y agencias con entregas prioritarias.</p>
+                        
+                        <ul class="space-y-3 text-xs text-gray-300 pt-4 border-t border-dark-border">
+                            <li class="flex items-center gap-2"><li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Producción continuada (4 a 8 ep/mes)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Tiempos de entrega express (24-48 hrs)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Creación de audiogramas para redes</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-neon-green"></i> Gestor de cuenta dedicado</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#qualifier-form" onclick="selectPlan('Corporativo')" class="block w-full py-3.5 rounded-xl bg-dark-panel hover:bg-gray-800 text-white font-bold text-xs uppercase tracking-wider text-center border border-dark-border transition-all">
+                            Cotizar este plan
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. INTERACTIVE PORTFOLIO PLAYER -->
+    <section id="portfolio" class="py-24 bg-dark-card relative border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Casos Reales</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold font-display text-white">Proyectos que ya suenan impecables.</h2>
+                </div>
+                <div class="flex gap-2">
+                    <button class="portfolio-tab active px-4 py-2 rounded-full text-xs font-mono uppercase bg-neon-green text-black font-bold" data-category="all">Todos</button>
+                    <button class="portfolio-tab px-4 py-2 rounded-full text-xs font-mono uppercase bg-dark-panel text-gray-400 border border-dark-border" data-category="ficcion">Ficción Sonora</button>
+                    <button class="portfolio-tab px-4 py-2 rounded-full text-xs font-mono uppercase bg-dark-panel text-gray-400 border border-dark-border" data-category="entrevista">Entrevistas</button>
+                </div>
+            </div>
+
+            <!-- Portfolio Tracks Stack -->
+            <div class="space-y-4">
+                
+                <!-- Track 1 -->
+                <div class="portfolio-item bg-dark-base p-6 rounded-2xl border border-dark-border flex flex-col md:flex-row items-center gap-6" data-category="ficcion">
+                    <button class="w-14 h-14 rounded-full bg-neon-green text-black flex items-center justify-center text-xl shrink-0 hover:scale-105 transition-transform port-play-btn">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </button>
+                    <div class="w-full md:w-1/3">
+                        <span class="text-[10px] font-mono text-neon-green uppercase">Audiodrama / Ficción</span>
+                        <h4 class="text-base font-bold text-white">Relatos del Abismo - Ep. 04</h4>
+                        <p class="text-xs text-gray-400 mt-1">Diseño sonoro binaural 3D y Foley de voz</p>
+                    </div>
+                    <div class="w-full md:w-1/2 flex items-center gap-1 h-10 port-wave">
+                        <!-- Bars dynamically added -->
+                    </div>
+                    <span class="font-mono text-xs text-gray-400 shrink-0">02:15 / Master HQ</span>
+                </div>
+
+                <!-- Track 2 -->
+                <div class="portfolio-item bg-dark-base p-6 rounded-2xl border border-dark-border flex flex-col md:flex-row items-center gap-6" data-category="entrevista">
+                    <button class="w-14 h-14 rounded-full bg-dark-panel text-neon-green flex items-center justify-center text-xl shrink-0 hover:bg-neon-green hover:text-black transition-all port-play-btn">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </button>
+                    <div class="w-full md:w-1/3">
+                        <span class="text-[10px] font-mono text-neon-green uppercase">Podcast Corporativo</span>
+                        <h4 class="text-base font-bold text-white">Conversaciones de Negocio</h4>
+                        <p class="text-xs text-gray-400 mt-1">Edición multicanal y nivelación broadcast</p>
+                    </div>
+                    <div class="w-full md:w-1/2 flex items-center gap-1 h-10 port-wave">
+                        <!-- Bars dynamically added -->
+                    </div>
+                    <span class="font-mono text-xs text-gray-400 shrink-0">01:45 / Master HQ</span>
+                </div>
+
+                <!-- Track 3 -->
+                <div class="portfolio-item bg-dark-base p-6 rounded-2xl border border-dark-border flex flex-col md:flex-row items-center gap-6" data-category="ficcion">
+                    <button class="w-14 h-14 rounded-full bg-dark-panel text-neon-green flex items-center justify-center text-xl shrink-0 hover:bg-neon-green hover:text-black transition-all port-play-btn">
+                        <i class="fa-solid fa-play ml-1"></i>
+                    </button>
+                    <div class="w-full md:w-1/3">
+                        <span class="text-[10px] font-mono text-neon-green uppercase">Documental Audio</span>
+                        <h4 class="text-base font-bold text-white">Voces de la Naturaleza</h4>
+                        <p class="text-xs text-gray-400 mt-1">Restauración espectral y ambientación</p>
+                    </div>
+                    <div class="w-full md:w-1/2 flex items-center gap-1 h-10 port-wave">
+                        <!-- Bars dynamically added -->
+                    </div>
+                    <span class="font-mono text-xs text-gray-400 shrink-0">03:10 / Master HQ</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. WORKFLOW TIMELINE (4 STEPS) -->
+    <section id="process" class="py-24 bg-dark-base relative border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Flujo Simple</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-display text-white">De tu micrófono a las plataformas en 4 pasos.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                
+                <!-- Step 1 -->
+                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border relative space-y-4">
+                    <span class="w-10 h-10 rounded-xl bg-neon-green text-black font-extrabold flex items-center justify-center font-mono text-sm">01</span>
+                    <h3 class="text-lg font-bold text-white">Sube tus archivos</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Envías tus grabaciones brutas mediante nuestro enlace seguro en Drive, WeTransfer o Dropbox.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border relative space-y-4">
+                    <span class="w-10 h-10 rounded-xl bg-dark-panel border border-dark-border text-neon-green font-extrabold flex items-center justify-center font-mono text-sm">02</span>
+                    <h3 class="text-lg font-bold text-white">Limpieza & Edición</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Eliminamos siseos, eco, muletillas involuntarias y fallas técnicas de toma.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border relative space-y-4">
+                    <span class="w-10 h-10 rounded-xl bg-dark-panel border border-dark-border text-neon-green font-extrabold flex items-center justify-center font-mono text-sm">03</span>
+                    <h3 class="text-lg font-bold text-white">Mezcla & Máster</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Balanceamos voces, aplicamos música, SFX y ajustamos los estándares LUFS.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border relative space-y-4">
+                    <span class="w-10 h-10 rounded-xl bg-dark-panel border border-dark-border text-neon-green font-extrabold flex items-center justify-center font-mono text-sm">04</span>
+                    <h3 class="text-lg font-bold text-white">Revisión & Entrega</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Recibes el máster listo para publicar con rondas de revisión incluidas.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. DYNAMIC QUALIFIER FORM -->
+    <section id="qualifier-form" class="py-24 bg-dark-card relative">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-neon-green font-mono text-xs uppercase tracking-widest font-semibold block mb-2">Diagnóstico Gratuito</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold font-display text-white">Llevemos el sonido de tu podcast al siguiente nivel.</h2>
+                <p class="text-gray-400 text-sm mt-3">Cuéntanos sobre tu proyecto y te enviaremos una propuesta personalizada en menos de 24 horas.</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-dark-base p-8 sm:p-12 rounded-3xl border border-dark-border shadow-2xl relative">
+                <form id="projectForm" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Nombre Completo *</label>
+                            <input type="text" required placeholder="Ej: Felipe Hernández" class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Correo Electrónico *</label>
+                            <input type="email" required placeholder="tu@dominio.com" class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Tipo de Proyecto *</label>
+                            <select id="selectedPlanSelect" class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors">
+                                <option value="Express">Edición & Mix Express</option>
+                                <option value="Integral" selected>Diseño Sonoro & Postproducción Integral</option>
+                                <option value="Corporativo">Podcast Continuado / Marca</option>
+                                <option value="Ficcion">Ficción Sonora / Audiodrama</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Episodios al mes</label>
+                            <select class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors">
+                                <option value="1-2">1 a 2 episodios</option>
+                                <option value="4">4 episodios (Semanal)</option>
+                                <option value="8+">Más de 8 episodios</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Enlace a muestra de audio o grabación previa (Opcional)</label>
+                        <input type="url" placeholder="https://drive.google.com/... o enlace de Spotify" class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Detalles Adicionales del Proyecto</label>
+                        <textarea rows="4" placeholder="Duración promedio de los episodios, necesidades de musicalización, etc." class="w-full px-4 py-3.5 rounded-xl bg-dark-input border border-dark-border text-white text-sm focus:outline-none focus:border-neon-green transition-colors"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-neon-green text-black font-bold text-sm uppercase tracking-wider neon-glow-btn flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Solicitar Diagnóstico de Audio Gratis
+                    </button>
+                </form>
+
+                <!-- Success Alert -->
+                <div id="formSuccessAlert" class="hidden mt-6 p-4 rounded-xl bg-emerald-500/10 border border-neon-green text-neon-green text-xs text-center font-mono">
+                    ¡Solicitud recibida! Te responderemos con un análisis de audio y cotización en menos de 24 horas.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FOOTER -->
+    <footer class="py-12 bg-dark-base border-t border-dark-border text-gray-500 text-xs">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-neon-green text-black font-extrabold font-display flex items-center justify-center">
+                    P
+                </div>
+                <div>
+                    <span class="text-gray-200 font-bold block">Prodcast</span>
+                    <span class="text-[10px] text-gray-400">Diseño de Audio & Postproducción Profesional</span>
+                </div>
+            </div>
+
+            <div class="text-center md:text-left">
+                <a href="mailto:contacto@prodcast.cl" class="text-gray-300 hover:text-neon-green font-mono transition-colors">contacto@prodcast.cl</a>
+                <p class="mt-1">Respuesta garantizada en menos de 24 horas.</p>
+            </div>
+
+            <p>© <span id="year"></span> prodcast.cl — Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Nav Toggle
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.className = "fa-solid fa-bars text-2xl";
+            } else {
+                menuIcon.className = "fa-solid fa-xmark text-2xl";
+            }
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(l => {
+            l.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = "fa-solid fa-bars text-2xl";
+            });
+        });
+
+        // Interactive A/B Player with Web Audio API Synthesized Audio Nodes
+        let audioCtx = null;
+        let isPlayingAB = false;
+        let abInterval = null;
+        let currentSeconds = 0;
+
+        const abPlayBtn = document.getElementById('abPlayBtn');
+        const abPlayIcon = document.getElementById('abPlayIcon');
+        const abToggle = document.getElementById('abToggle');
+        const abModeBadge = document.getElementById('abModeBadge');
+        const abStatusText = document.getElementById('abStatusText');
+        const abTimer = document.getElementById('abTimer');
+        const abWaveContainer = document.getElementById('abWaveContainer');
+        const rawLabel = document.getElementById('rawLabel');
+        const masterLabel = document.getElementById('masterLabel');
+
+        // Create 36 Waveform Bars
+        const abBars = [];
+        for (let i = 0; i < 36; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'w-full bg-red-500/50 rounded-t-sm transition-all duration-150';
+            bar.style.height = '20%';
+            abWaveContainer.appendChild(bar);
+            abBars.push(bar);
+        }
+
+        // Web Audio Oscillators for Sound Demo
+        let osc = null;
+        let noiseNode = null;
+        let gainNode = null;
+
+        function startAudioNodes() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            // Create background room hiss simulation
+            const bufferSize = audioCtx.sampleRate * 2;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            noiseNode = audioCtx.createBufferSource();
+            noiseNode.buffer = noiseBuffer;
+            noiseNode.loop = true;
+
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.value = 1200;
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = abToggle.checked ? 0.001 : 0.08; // Reduce noise in Master
+
+            noiseNode.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseNode.start();
+        }
+
+        function stopAudioNodes() {
+            if (noiseNode) {
+                try { noiseNode.stop(); } catch(e){}
+            }
+        }
+
+        abPlayBtn.addEventListener('click', () => {
+            isPlayingAB = !isPlayingAB;
+
+            if (isPlayingAB) {
+                abPlayIcon.className = "fa-solid fa-pause ml-0";
+                abStatusText.textContent = "Reproduciendo simulador de audio en vivo";
+                startAudioNodes();
+
+                abInterval = setInterval(() => {
+                    currentSeconds++;
+                    const secs = String(currentSeconds % 60).padStart(2, '0');
+                    abTimer.textContent = `00:${secs} / 00:30`;
+
+                    // Update waveform bars
+                    const isMaster = abToggle.checked;
+                    abBars.forEach(bar => {
+                        const h = isMaster ? Math.floor(Math.random() * 75) + 20 : Math.floor(Math.random() * 40) + 5;
+                        bar.style.height = `${h}%`;
+                    });
+
+                    if (currentSeconds >= 30) {
+                        resetAB();
+                    }
+                }, 200);
+            } else {
+                pauseAB();
+            }
+        });
+
+        function pauseAB() {
+            isPlayingAB = false;
+            abPlayIcon.className = "fa-solid fa-play ml-1";
+            abStatusText.textContent = "Pausado";
+            clearInterval(abInterval);
+            stopAudioNodes();
+        }
+
+        function resetAB() {
+            pauseAB();
+            currentSeconds = 0;
+            abTimer.textContent = "00:00 / 00:30";
+            abBars.forEach(bar => bar.style.height = '15%');
+        }
+
+        // Toggle Switch A/B event
+        abToggle.addEventListener('change', () => {
+            const isMaster = abToggle.checked;
+
+            if (isMaster) {
+                abModeBadge.textContent = "MODO: AUDIO MASTERIZADO (Voz Limpia + Sin Eco + -16 LUFS)";
+                abModeBadge.className = "text-neon-green font-bold";
+                rawLabel.className = "text-xs font-mono uppercase font-bold text-gray-500";
+                masterLabel.className = "text-xs font-mono uppercase font-bold text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.8)]";
+
+                abBars.forEach(b => {
+                    b.className = 'w-full bg-neon-green rounded-t-sm transition-all duration-150';
+                });
+            } else {
+                abModeBadge.textContent = "MODO: AUDIO CRUDO (Siseos + Eco + Volumen Bajo)";
+                abModeBadge.className = "text-red-400 font-bold";
+                rawLabel.className = "text-xs font-mono uppercase font-bold text-red-400";
+                masterLabel.className = "text-xs font-mono uppercase font-bold text-gray-500";
+
+                abBars.forEach(b => {
+                    b.className = 'w-full bg-red-500/50 rounded-t-sm transition-all duration-150';
+                });
+            }
+        });
+
+        // Portfolio Bars Generator
+        const portWaves = document.querySelectorAll('.port-wave');
+        portWaves.forEach(wave => {
+            for (let i = 0; i < 30; i++) {
+                const b = document.createElement('div');
+                b.className = 'w-1 bg-gray-700 rounded-full h-3';
+                wave.appendChild(b);
+            }
+        });
+
+        // Portfolio Tabs Filtering
+        const tabs = document.querySelectorAll('.portfolio-tab');
+        const items = document.querySelectorAll('.portfolio-item');
+
+        tabs.forEach(t => {
+            t.addEventListener('click', () => {
+                tabs.forEach(tb => {
+                    tb.className = "portfolio-tab px-4 py-2 rounded-full text-xs font-mono uppercase bg-dark-panel text-gray-400 border border-dark-border";
+                });
+                t.className = "portfolio-tab active px-4 py-2 rounded-full text-xs font-mono uppercase bg-neon-green text-black font-bold";
+
+                const cat = t.getAttribute('data-category');
+                items.forEach(it => {
+                    if (cat === 'all' || it.getAttribute('data-category') === cat) {
+                        it.style.display = 'flex';
+                    } else {
+                        it.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Select Plan helper function
+        function selectPlan(planName) {
+            const select = document.getElementById('selectedPlanSelect');
+            if (select) {
+                select.value = planName;
+            }
+        }
+
+        // Form Submit Handler
+        const projectForm = document.getElementById('projectForm');
+        const formSuccessAlert = document.getElementById('formSuccessAlert');
+
+        projectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            formSuccessAlert.classList.remove('hidden');
+            projectForm.reset();
+            setTimeout(() => {
+                formSuccessAlert.classList.add('hidden');
+            }, 6000);
+        });
+    </script>
+</body>
+</html>
